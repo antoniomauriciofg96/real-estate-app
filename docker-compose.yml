@@ -1,0 +1,46 @@
+version: '3.7'
+#to run
+#docker-compose up -d
+#to stop
+#docker-compose down 
+
+services:
+          
+  db:
+    image: postgres
+    container_name: real_estate_postgres
+    restart: always
+    environment:
+      POSTGRES_ROOT_PASSWORD: root
+      POSTGRES_DATABASE: real_estate_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root  
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./src/main/resources/db/migration/V1__001-creates.sql:/docker-entrypoint-initdb.d/V1__001-creates.sql
+      - ./src/main/resources/db/migration/V1__002-inserts.sql:/docker-entrypoint-initdb.d/V1__002-inserts.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+#  api:
+#    image: mauriciof96/real-estate-app
+#	 build:
+#       context: .
+#    container_name: real-estate-app
+#	 depends_on:
+#       - db
+#    restart: always
+#    ports:
+#      - 8080:5000
+#    environment:
+#      SPRING_PROFILES_ACTIVE: "master"
+#    networks:
+#      - backend
+#volumes:
+#  src:
+networks:     
+  backend:
+    driver: bridge
+    name: real_estate_network
+    
